@@ -149,6 +149,7 @@ System configuration ---> Root filesystem overlay directories ---> $(BR2_EXTERNA
 Kernel ---> Linux Kernel ---> no
 Filesystem images ---> cpio the root filesystem (for use as an initial RAM filesystem) ---> yes
 Filesystem images ---> cpio the root filesystem (for use as an initial RAM filesystem) ---> Compression method ---> gzip
+Target packages ---> Networking applications ---> iproute2 ---> yes
 ```
 
 Save the configuration and build:
@@ -175,6 +176,26 @@ time make -j "$(nproc)"
 ```
 
 ## Run mini-linux
+On host run a virtual can interface with name can0.
+
+```
+qemu-system-x86_64 -kernel $LINUX_IMAGE \
+  -initrd $BUILDROOT_BUILD/images/rootfs.cpio.gz \
+  -nographic \
+  -append "console=ttyS0" \
+  -enable-kvm \
+  -object can-bus,id=canbus0 \
+  -object can-host-socketcan,id=canhost0,if=can0,canbus=canbus0 \
+  -device kvaser_pci,canbus=canbus0
 ```
 
+On the guest set bitrate and run CAN interface:
+```
+ip link set can0 type can bitrate 1000000
+ip link set can0 up
+```
+
+Run CAN demo application:
+```
+./can_demo
 ```
