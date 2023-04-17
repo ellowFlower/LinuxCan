@@ -1,6 +1,6 @@
 # LinuxCan
 Minimal linux with CAN protocol support running inside a virtual machine (QEMU). Includes a CAN protocol demo user application. Host running Ubuntu 22.04.
-Some details like installing qemu is omitted.
+Some details like installing qemu are omitted.
 
 ```
 export BUILDS=~/mini-linux
